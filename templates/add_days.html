@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!-- <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"> -->
+	<!-- <link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' rel='stylesheet'/> -->
+
+	
+	<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+	<title> prideti darbo dienu</title>
+	
+	<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+	<!-- <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> -->
+	
+	<link rel="stylesheet" href="../static/css/style.css">
+	
+</head>
+<body>
+<div class="container ">
+	<form role="form"  method="POST" >
+
+	
+	
+	<table style="font-size:20px;" class="ck_table">
+	{% for month in year %}
+		{% if (month == need_month[0]) or (month == need_month[1]) %}
+		<tr>
+		 <td>{{month}}</td>
+		{% for days in year[month] %}
+			<td>
+				<label for="cb{{month}}_{{days}}"> _{{days}}_</label>
+				<input type="checkbox" id="cb{{month}}_{{days}}" name="cb{{month}}_{{days}}"  {{ year[month][days] }} >
+			</td>
+		{% endfor %}
+		</tr>
+		{% endif %}
+	{% endfor %}
+	
+	</table>
+  
+	<input type="submit" class="submit">
+  
+	</form>
+
+		
+</div>
+
+</body>
+</html>
