@@ -144,21 +144,31 @@ def work():
 	return(i_to_state(i), i_to_color(i))
 
 
-
+def is_user_working_today():
+	year = get_user_work_days()
+	month = int(format(datetime.now()).split("-")[1])
+	day = int((format(datetime.now()).split("-")[2]).split(" ")[0])
+	do = year[month][day]
+	if do == "checked":
+		return "Vaidui dirbas"
+	else:
+		return "Vaidui laisva"
+	
 app = Flask(__name__)
 
 @app.route("/")
 def index():
 	weeks = to_table()
 	state, color = work()
-	return render_template("base.html",w_state=state,w_color=color,weeks=weeks)
+	user_today = is_user_working_today()
+	return render_template("base.html",w_state=state,w_color=color,weeks=weeks, user_today=user_today)
 
 @app.route("/i/",  methods=["POST","GET"])	
 def add_user_work_days():
+	year = get_user_work_days()
 	curent_next_month = get_curent_next_month()
-
+	
 	if request.method == 'POST':
-		year = get_user_work_days()
 		for month in year:
 			for day in year[month]:
 				if month == curent_next_month[0] or month == curent_next_month[1]:
@@ -171,8 +181,8 @@ def add_user_work_days():
 		save_pickle(year,memory)
 		return redirect("/")
 	else:
-		year = get_user_work_days()
-		return render_template("add_days.html",year=year,need_month=curent_next_month)
+		# year = get_user_work_days()
+		return render_template("add_days.html", year=year, need_month=curent_next_month)
 	
 @app.errorhandler(404)
 def not_found(e):
