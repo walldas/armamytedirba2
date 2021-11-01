@@ -150,7 +150,7 @@ def is_user_working_today():
 	day = int((format(datetime.now()).split("-")[2]).split(" ")[0])
 	do = year[month][day]
 	if do == "checked":
-		return "Vaidui dirbas"
+		return "Vaidui darbas"
 	else:
 		return "Vaidui laisva"
 	
