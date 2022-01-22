@@ -1,9 +1,14 @@
-import time,pickle,os,ephem
+import time,os,ephem
 from flask import Flask, render_template, url_for, request, redirect,make_response, send_file
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime#,date
 
-memory = "data.pickle"
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials as sac
+scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
+creds = sac.from_json_keyfile_name("seipsheet.json",scope)
+
+
 	
 def add_moon_phases(days):
 
@@ -26,15 +31,44 @@ def add_moon_phases(days):
 					day[4] = moon[0]
 				break
 				
-def save_pickle(any_data,file_ = "data.pickle"):
-	with open(file_, 'wb') as f:
-		pickle.dump(any_data, f, pickle.HIGHEST_PROTOCOL)
+def save_to_db(data):	
+	client = gspread.authorize(creds)
+	sheets = client.open("zymejimai").worksheets()
+	sheet = sheets[1]
+	for month in data:
+		data_rw = ""
+		for day in data[month]:
+			check = data[month][day]
+			if check == "checked":
+				data_rw+="t"
+			else:
+				data_rw+="n"	
+		sheet.update_cell(month,1,data_rw)
+			
+		
 
-def load_pickle(file_):	
-	if os.path.exists(file_):
-		with open(file_, 'rb') as f:
-			return pickle.load(f)
-	return []
+def load_db():	
+	client = gspread.authorize(creds)
+	sheets = client.open("zymejimai").worksheets()
+	sheet = sheets[1]
+	col = sheet.col_values(1)
+	year = {}
+	month = 1
+	for cell in col:
+		days = {}
+		d = 1
+		for i in cell:
+			if i=="t":
+				days[d]="checked"
+			else:
+				days[d]=""
+			d+=1
+		year[month]=days
+		month+=1
+	return year
+			
+	
+	
 	
 def calcEasterDate():
 	dd = int(time.time())
@@ -86,15 +120,16 @@ def get_curent_next_month():
 	return [curent_month,next_month]
 	
 def get_user_work_days():
-	if os.path.exists(memory):
-		return load_pickle(memory)
+	try:
+		return load_db()
+	except:print("nepaviko uzsikelti duomenu bazes")
 	year = {}
 	for m in range(1,13,1):
 		days = {}
 		for d in range(1,32,1):
 			days[d]= ""
 		year[m]= days
-	save_pickle(year,memory)
+	save_to_db(year)
 	return year
 	
 def to_table():
@@ -166,6 +201,7 @@ def index():
 @app.route("/i/",  methods=["POST","GET"])	
 def add_user_work_days():
 	year = get_user_work_days()
+	print(year)
 	curent_next_month = get_curent_next_month()
 	
 	if request.method == 'POST':
@@ -175,13 +211,14 @@ def add_user_work_days():
 					cb = request.form.get("cb{}_{}".format(month,day))
 					if cb == "on":
 						year[month][day]= "checked"
-					else:
-						year[month][day]= ""
+				else:
+					year[month][day]= ""
+				
+					
 		
-		save_pickle(year,memory)
+		save_to_db(year)
 		return redirect("/")
 	else:
-		# year = get_user_work_days()
 		return render_template("add_days.html", year=year, need_month=curent_next_month)
 	
 @app.errorhandler(404)
