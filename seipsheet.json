@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "mamytes-654321",
+  "private_key_id": "1b2a6161148e5ae3205d02d1afb1cefdf0c2ae75",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC+d7pq+pk1n9j/\nFzPD8QsulXBV+xoTEolXj77ZutKQoyRYRtQUAKGYl/CQDlmK6hMGUw/jjCryH0q2\naA0OOEB9oEnUFpgG9YZbi3xEPKO9cmKe4j83YZvwmtTRVCdLZDeeBPKnsoDKd3JX\n6VjfPZZj5dpQDJSBWb0TK22Lt7wzmgCL+lL3dupeQNjauz9tpPXvQ8UZ3R9I4CST\nEXelhVSLy8Zh8A43p3OCN+UcUaXFFxlLp8S4KMdIlaJAdZikXrLaZxCbG9j1bZOa\n3WYEeGi0cg1fj7WcC4kzHk8GFn2BqRbOnpYFQ8YxoM5ae+KBOJF+xswTTSh0AU19\nT0bH3qBZAgMBAAECggEACCC6gcouiOKeCJ9dhCULIcfFbXCJDPtOL8Bgl+X9tP0L\n61XKbbgWgpkpQ4cj5xD/aCuvPTnuszpb89YTiIx5+WJtBByatuFPWc9lVCbKTfv4\nSBNw4yof1MVRWPAgZSU3rQnvrkb9xqYQ6RN6HryqvZnswQcTEe9ZvtxW5mQcJzoo\n/IWxKr3QFlWjIp992EigP7nNFaIJB4FdiJ7ycqUaR++HIthCW1ICrDiujbmC9CcJ\nS4ITYrMQSI9/Whj7A3qdlkfgDqlN8KRegUTIbX7PCKRScOnVpwUtooSTzFgo6/Yo\nw03sGzgbtECijEy8AFvJdkpt24EdsjSAnlSkEytCSQKBgQDdglFwMrP0nZOI6YsK\nNapFsRHKOL86vT0NozdzE+kJi4MB4e3+Y1+MkVrmhc3St+A91tP3d9fQl9NOdQZ+\nFUhdEE8EcXGVPhog/loqNi6s7UcwiXQOFFWAs0X6eH1ybJiideTQE6QeQw2l67J4\nXKJyRMkmfRup8TScE6r92lMP6wKBgQDcIA4IYaDVB50Bj+sGER/NztHp2BrH597r\nyyGveem1wsncBYZv682MLOjyCmU/83ZvVMkpohkoZjThGswQsRy0yMz0rhY5SSXB\ny0MQJb7qBjRIjfOCWUGJmFuQ8c4E6Fsk0azzbNBE+jMXoFgApxPJ96qjo9W5hfRn\n7F028WPDywKBgBfJrPE9oLG+Ul+7pODdzoFZeK2c1nx6Yhoa0xOaqcYKo3EKUEKn\nbVVtLrPe3rGoaX56mZzT0+tkwp6EVsQniPPlknbJsAb0+l1cs1YhJ3YOrTx7Jml0\nqZH+rp8tXVtyahnYS1BFK7TMQqT04N+oIxHebTOi79uaOaohOpW0YoMtAoGAX08h\nxE9BK/vX501BHadcdegOy4leTx/+TWnuc+P9ZU2pyTI7O0qF/SOU2PfXTxFDPoEf\neH9PFUbrrmvD35ZQL5ah529ZAATD7Fzt9JfjScDV8nRD8zRiRAlL3D5WTZmtnQuM\nLvn2U2dhp+EtOVseHly17ZSKfYGaiUS2N4vc/nECgYBVv0Sc7PGgB3rDg8RnYQ2U\ngT4QG/DH8ZblTHLlEceMYg2EP62rZZO650a7MavvvbqBJ+hWt14Xrz1lB4fZw1px\nZNEkbPwEERArVK8j6CRCGtPCaBersOghyxGEXQRQRVQWLz9wcghDz7yWPpgtHaOW\n2vSoIu4mL8PL6Q6VS9zFnQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "paslapiuko-db@mamytes-654321.iam.gserviceaccount.com",
+  "client_id": "115517396834543528469",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/paslapiuko-db%40mamytes-654321.iam.gserviceaccount.com"
+}

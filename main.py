@@ -1,9 +1,14 @@
-import time,pickle,os,ephem
+import time,os,ephem
 from flask import Flask, render_template, url_for, request, redirect,make_response, send_file
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime#,date
 
-memory = "data.pickle"
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials as sac
+scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
+creds = sac.from_json_keyfile_name("seipsheet.json",scope)
+
+
 	
 def add_moon_phases(days):
 
@@ -26,15 +31,96 @@ def add_moon_phases(days):
 					day[4] = moon[0]
 				break
 				
-def save_pickle(any_data,file_ = "data.pickle"):
-	with open(file_, 'wb') as f:
-		pickle.dump(any_data, f, pickle.HIGHEST_PROTOCOL)
+# def save_to_db0(data):	
+# 	client = gspread.authorize(creds)
+# 	sheets = client.open("myWebDB").worksheets()
+# 	sheet = sheets[0]
+# 	for month in data:
+# 		data_rw = ""
+# 		for day in data[month]:
+# 			check = data[month][day]
+# 			if check == "checked":
+# 				data_rw+="t"
+# 			else:
+# 				data_rw+="n"	
+# 		sheet.update_cell(month,1,data_rw)
 
-def load_pickle(file_):	
-	if os.path.exists(file_):
-		with open(file_, 'rb') as f:
-			return pickle.load(f)
-	return []
+def mode_to_simbol(modes):
+	if   modes[1] == "checked":
+		return "d"
+	elif modes[2] == "checked":
+		return "v"
+	elif modes[3] == "checked":
+		return "n"
+	else :
+		return "l"
+
+def save_to_db(data):	
+	client = gspread.authorize(creds)
+	sheets = client.open("myWebDB").worksheets()
+	sheet = sheets[0]
+	for month in data:
+		data_rw = ""
+		for day in data[month]:
+			# for mode in data[month][day]:
+			data_rw += mode_to_simbol(data[month][day])
+				# check = data[month][day][mode]
+				# if check == "checked":
+				# 	data_rw+="t"
+				# else:
+				# 	data_rw+="n"	
+
+		sheet.update_cell(month,1,data_rw)
+			
+		
+
+# def load_db0():	
+# 	client = gspread.authorize(creds)
+# 	sheets = client.open("myWebDB").worksheets()
+# 	sheet = sheets[0]
+# 	col = sheet.col_values(1)
+# 	year = {}
+# 	month = 1
+# 	for cell in col:
+# 		days = {}
+# 		d = 1
+# 		for i in cell:
+# 			if i=="t": #0
+# 				days[d]="checked"
+# 			else:
+# 				days[d]=""
+# 			d+=1
+# 		year[month]=days
+# 		month+=1
+# 	return year
+
+def load_db():	
+	client = gspread.authorize(creds)
+	sheets = client.open("myWebDB").worksheets()
+	sheet = sheets[0]
+	col = sheet.col_values(1)
+	year = {}
+	month = 1
+	for cell in col:
+		days = {}
+		d = 1
+		for i in cell:
+			if i=="d": # 1 dienine D
+				days[d]={1:"checked",2:"",3:""}
+			elif i == "v": # 2 vakarine
+				days[d] = {1:"",2:"checked",3:""}
+			elif i == "n": # 3 naktine
+				days[d] = {1:"",2:"",3:"checked"}
+
+			else:
+				days[d]={1:"",2:"",3:""}
+			d+=1
+		year[month]=days
+		month+=1
+	return year
+			
+	
+	
 	
 def calcEasterDate():
 	dd = int(time.time())
@@ -86,15 +172,16 @@ def get_curent_next_month():
 	return [curent_month,next_month]
 	
 def get_user_work_days():
-	if os.path.exists(memory):
-		return load_pickle(memory)
+	try:
+		return load_db()
+	except:print("nepaviko uzsikelti duomenu bazes")
 	year = {}
 	for m in range(1,13,1):
 		days = {}
 		for d in range(1,32,1):
-			days[d]= ""
+			days[d]= {1:"",2:"",3:""}
 		year[m]= days
-	save_pickle(year,memory)
+	save_to_db(year)
 	return year
 	
 def to_table():
@@ -108,7 +195,9 @@ def to_table():
 		i = dd // (60 * 60 * 24) % 8
 		moon = ""
 		no_work_day = ""
-		days.append([week, day, i_to_border_color(i),month, moon, no_work_day,user_work_days[month][day]])
+		user_mode = mode_to_simbol(user_work_days[month][day]) 
+		theDAY = [week, day, i_to_border_color(i),month, moon, no_work_day,user_mode]
+		days.append(theDAY)
 	add_moon_phases(days)
 	add_no_work(days)
 	weeks = []
@@ -148,9 +237,14 @@ def is_user_working_today():
 	year = get_user_work_days()
 	month = int(format(datetime.now()).split("-")[1])
 	day = int((format(datetime.now()).split("-")[2]).split(" ")[0])
-	do = year[month][day]
-	if do == "checked":
-		return "Vaidui dirbas"
+	modes = year[month][day]
+	do = mode_to_simbol(modes)
+	if do == "d":
+		return "Vaidui dieninė"
+	elif do == "v":
+		return "Vaidui vakarinė"
+	elif do == "n":
+		return "Vaidui naktinė"
 	else:
 		return "Vaidui laisva"
 	
@@ -171,17 +265,21 @@ def add_user_work_days():
 	if request.method == 'POST':
 		for month in year:
 			for day in year[month]:
-				if month == curent_next_month[0] or month == curent_next_month[1]:
-					cb = request.form.get("cb{}_{}".format(month,day))
-					if cb == "on":
-						year[month][day]= "checked"
-					else:
-						year[month][day]= ""
+				for mode in year[month][day]:
+
+					if month == curent_next_month[0] or month == curent_next_month[1]:
+						cb = request.form.get("cb{}_{}_{}".format(month,day,mode))
+						
+						if cb == "on":
+							year[month][day][mode]= "checked"
+						else:
+							year[month][day][mode]= ""
+				
+					
 		
-		save_pickle(year,memory)
+		save_to_db(year)
 		return redirect("/")
 	else:
-		# year = get_user_work_days()
 		return render_template("add_days.html", year=year, need_month=curent_next_month)
 	
 @app.errorhandler(404)

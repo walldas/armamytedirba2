@@ -32,8 +32,13 @@
 				{% for day in week %}
 				
 				
-					{% if day[6]=="checked" %} 
-						<td style="border: solid 5px rgba{{day[2]}};border-bottom-color:rgb(120,120,120);">
+					{% if day[6]=="d" %} 
+						<td style="border: solid 5px rgba{{day[2]}};border-bottom: solid 12px rgb(255,255,255);">
+					{% elif day[6]=="v" %} 
+					<td style="border: solid 5px rgba{{day[2]}};border-bottom: solid 12px rgb(123,123,123);">
+					{% elif day[6]=="n" %} 
+					<td style="border: solid 5px rgba{{day[2]}};border-bottom: solid 12px rgb(0,0,0);">
+
 					{% else %}
 					
 						<td style="border: solid 5px rgba{{day[2]}};">

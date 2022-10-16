@@ -22,21 +22,61 @@
 
 	
 	
-	<table style="font-size:20px;" class="ck_table">
+	<!-- <table style="font-size:20px;" class="ck_table">
 	{% for month in year %}
 		{% if (month == need_month[0]) or (month == need_month[1]) %}
 		<tr>
-		 <td>{{month}}</td>
-		{% for days in year[month] %}
-			<td>
-				<label for="cb{{month}}_{{days}}"> _{{days}}_</label>
-				<input type="checkbox" id="cb{{month}}_{{days}}" name="cb{{month}}_{{days}}"  {{ year[month][days] }} >
-			</td>
+		 	<td>{{month}}</td>
+			{% for days in year[month] %}
+				<td>
+					<label for="cb{{month}}_{{days}}"> _{{days}}_</label>
+					<input type="checkbox" id="cb{{month}}_{{days}}" name="cb{{month}}_{{days}}"  {{ year[month][days] }} >
+				</td>
 		{% endfor %}
 		</tr>
 		{% endif %}
 	{% endfor %}
 	
+	</table> -->
+	
+
+	<table style="font-size:20px;" class="ck_table">
+		{% for month in year %}
+			{% if (month == need_month[0]) or (month == need_month[1]) %}
+			
+
+				 <tr>
+					<th></th>
+					<th></th>
+					<th><br>{{month}}</th>
+					<th></th>
+					
+				 </tr>
+				 <tr>
+					<th></th>
+					<th>D</th>
+					<th>V</th>
+					<th>N</th>
+					
+				 </tr>
+				{% for day in year[month] %}
+				 	<tr>
+						<td>
+							{{day}}
+						</td>
+						{% for mode in year[month][day] %}
+						<td>
+							<label for="cb{{month}}_{{day}}_{{mode}}">  </label>
+							<input type="checkbox" id="cb{{month}}_{{day}}_{{mode}}" name="cb{{month}}_{{day}}_{{mode}}"  {{ year[month][day][mode] }} >
+						</td>
+						{% endfor %}
+						
+				</tr>
+				{% endfor %}
+					 
+				{% endif %}
+		{% endfor %}
+					 
 	</table>
   
 	<input type="submit" class="submit">
